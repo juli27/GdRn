@@ -18,12 +18,12 @@ public class NumberGuessingGameServer {
 
         // don't crash the server when an exception occurs with the client connection
         // and auto close the socket
-        try (connection) {
+        try {
           InputStream in = connection.getInputStream();
           OutputStream out = connection.getOutputStream();
 
-          out.write(("\nWelcome to Luisa's secret NumberGuessing game!\n"
-              + "I'll grant you 6 turns to guess my secret number between 0 and 50\n").getBytes());
+          out.write(("\r\nWelcome to Luisa's secret NumberGuessing game!\r\n"
+              + "I'll grant you 6 turns to guess my secret number between 0 and 50\r\n").getBytes());
 
           boolean won = false;
           int number = ThreadLocalRandom.current().nextInt(50);
@@ -38,7 +38,7 @@ public class NumberGuessingGameServer {
             try {
               guess = Integer.parseInt(input);
             } catch (NumberFormatException ex) {
-              out.write("That's not a valid number!\n".getBytes());
+              out.write("That's not a valid number!\r\n".getBytes());
               ++attemptsLeft;
               continue;
             }
@@ -52,17 +52,19 @@ public class NumberGuessingGameServer {
               break;
             }
 
-            out.write((" Remaining turns: " + (attemptsLeft - 1) + '\n').getBytes());
+            out.write((" Remaining turns: " + (attemptsLeft - 1) + "\r\n").getBytes());
           }
 
           if (won) {
-            out.write("Congratulations, you won!\n".getBytes());
+            out.write("Congratulations, you won!\r\n".getBytes());
           } else {
-            out.write("You lost :(\n".getBytes());
+            out.write("You lost :(\r\n".getBytes());
           }
         } catch (IOException | RuntimeException ex) {
           ex.printStackTrace();
         }
+
+        connection.close();
       }
     } catch (IOException ex) {
       ex.printStackTrace();
