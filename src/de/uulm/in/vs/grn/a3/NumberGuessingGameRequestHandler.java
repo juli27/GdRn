@@ -21,9 +21,10 @@ class NumberGuessingGameRequestHandler implements Runnable {
 
   @Override
   public void run() {
+    System.out.println("[" + connection.getInetAddress().getHostAddress() + "] connected");
+
     try (InputStream inStream = connection.getInputStream();
         OutputStream outStream = connection.getOutputStream()) {
-      System.out.println("[" + connection.getInetAddress().getHostAddress() + "] connected");
 
       BufferedReader in = new BufferedReader(new InputStreamReader(inStream, StandardCharsets.UTF_8));
       PrintWriter out = new PrintWriter(new OutputStreamWriter(outStream, StandardCharsets.UTF_8));
@@ -69,9 +70,10 @@ class NumberGuessingGameRequestHandler implements Runnable {
 
       out.flush();
 
-      System.out.println("[" + connection.getInetAddress().getHostAddress() + "] disconnected");
     } catch (IOException | RuntimeException ex) {
       ex.printStackTrace();
     }
+
+    System.out.println("[" + connection.getInetAddress().getHostAddress() + "] disconnected");
   }
 }
